@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Astor</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Sistema de Gestión Astor</h1>
+        
+        <!-- Acceso con Roles y Permisos -->
+        <div class="bg-white shadow-md rounded-lg p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-2">Acceso con Roles y Permisos</h2>
+            <p>Roles: Administrador, Moderador, Usuario Final</p>
+            <p>Sistema de seguridad integrado para cada nivel de acceso.</p>
+        </div>
+
+        <!-- Dashboard Centralizado -->
+        <div class="bg-white shadow-md rounded-lg p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-2">Dashboard Centralizado</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-blue-100 p-4 rounded">
+                    <h3 class="font-bold">ASTOR 1</h3>
+                    <p>Ingresos: <span id="ingresos-astor1">$0</span></p>
+                    <p>Egresos: <span id="egresos-astor1">$0</span></p>
+                    <p>Balance: <span id="balance-astor1">$0</span></p>
+                    <form class="mt-2" onsubmit="return false;">
+                        <input type="number" id="ingreso-astor1" placeholder="Agregar Ingreso" class="block w-full mb-2 p-2 border rounded">
+                        <input type="number" id="egreso-astor1" placeholder="Agregar Egreso" class="block w-full mb-2 p-2 border rounded">
+                        <button type="button" onclick="agregarTransaccion('astor1')" class="bg-blue-500 text-white px-4 py-2 rounded">Agregar</button>
+                    </form>
+                    <div class="mt-4">
+                        <button onclick="mostrarBalance('diario', 'astor1')" class="bg-gray-300 text-black px-2 py-1 rounded">Diario</button>
+                        <button onclick="mostrarBalance('mensual', 'astor1')" class="bg-gray-300 text-black px-2 py-1 rounded">Mensual</button>
+                        <button onclick="mostrarBalance('anual', 'astor1')" class="bg-gray-300 text-black px-2 py-1 rounded">Anual</button>
+                    </div>
+                </div>
+                <div class="bg-blue-100 p-4 rounded">
+                    <h3 class="font-bold">ASTOR 2</h3>
+                    <p>Ingresos: <span id="ingresos-astor2">$0</span></p>
+                    <p>Egresos: <span id="egresos-astor2">$0</span></p>
+                    <p>Balance: <span id="balance-astor2">$0</span></p>
+                    <form class="mt-2" onsubmit="return false;">
+                        <input type="number" id="ingreso-astor2" placeholder="Agregar Ingreso" class="block w-full mb-2 p-2 border rounded">
+                        <input type="number" id="egreso-astor2" placeholder="Agregar Egreso" class="block w-full mb-2 p-2 border rounded">
+                        <button type="button" onclick="agregarTransaccion('astor2')" class="bg-blue-500 text-white px-4 py-2 rounded">Agregar</button>
+                    </form>
+                    <div class="mt-4">
+                        <button onclick="mostrarBalance('diario', 'astor2')" class="bg-gray-300 text-black px-2 py-1 rounded">Diario</button>
+                        <button onclick="mostrarBalance('mensual', 'astor2')" class="bg-gray-300 text-black px-2 py-1 rounded">Mensual</button>
+                        <button onclick="mostrarBalance('anual', 'astor2')" class="bg-gray-300 text-black px-2 py-1 rounded">Anual</button>
+                    </div>
+                </div>
+                <div class="bg-blue-100 p-4 rounded">
+                    <h3 class="font-bold">INMOBILIARIA</h3>
+                    <p>Ingresos: <span id="ingresos-inmobiliaria">$0</span></p>
+                    <p>Egresos: <span id="egresos-inmobiliaria">$0</span></p>
+                    <p>Balance: <span id="balance-inmobiliaria">$0</span></p>
+                    <form class="mt-2" onsubmit="return false;">
+                        <input type="number" id="ingreso-inmobiliaria" placeholder="Agregar Ingreso" class="block w-full mb-2 p-2 border rounded">
+                        <input type="number" id="egreso-inmobiliaria" placeholder="Agregar Egreso" class="block w-full mb-2 p-2 border rounded">
+                        <button type="button" onclick="agregarTransaccion('inmobiliaria')" class="bg-blue-500 text-white px-4 py-2 rounded">Agregar</button>
+                    </form>
+                    <div class="mt-4">
+                        <button onclick="mostrarBalance('diario', 'inmobiliaria')" class="bg-gray-300 text-black px-2 py-1 rounded">Diario</button>
+                        <button onclick="mostrarBalance('mensual', 'inmobiliaria')" class="bg-gray-300 text-black px-2 py-1 rounded">Mensual</button>
+                        <button onclick="mostrarBalance('anual', 'inmobiliaria')" class="bg-gray-300 text-black px-2 py-1 rounded">Anual</button>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4">Reportes detallados de ingresos, egresos y balances (diarios, semanales, mensuales y anuales).</p>
+        </div>
+
+        <!-- Gestión de Productos y Facturas -->
+        <div class="bg-white shadow-md rounded-lg p-4">
+            <h2 class="text-xl font-semibold mb-2">Gestión de Productos y Facturas</h2>
+            <p>Listado completo con imágenes y detalles de productos y facturas de compra.</p>
+            <form class="mt-4" onsubmit="return false;">
+                <input type="text" id="nombre-producto" placeholder="Nombre del Producto" class="block w-full mb-2 p-2 border rounded">
+                <input type="file" id="foto-factura" class="block w-full mb-2 p-2 border rounded">
+                <button type="button" onclick="agregarProducto()" class="bg-blue-500 text-white px-4 py-2 rounded">Agregar Producto</button>
+            </form>
+            <div id="lista-productos" class="grid grid-cols-2 gap-4 mt-4">
+                <!-- Productos se agregarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2 id="modal-title" class="text-xl font-bold mb-2"></h2>
+            <p id="modal-content"></p>
+        </div>
+    </div>
+
+    <script>
+        function agregarTransaccion(comercio) {
+            const ingreso = parseFloat(document.getElementById(`ingreso-${comercio}`).value) || 0;
+            const egreso = parseFloat(document.getElementById(`egreso-${comercio}`).value) || 0;
+            const ingresosElem = document.getElementById(`ingresos-${comercio}`);
+            const egresosElem = document.getElementById(`egresos-${comercio}`);
+            const balanceElem = document.getElementById(`balance-${comercio}`);
+
+            const ingresosActuales = parseFloat(ingresosElem.textContent.replace('$', '')) || 0;
+            const egresosActuales = parseFloat(egresosElem.textContent.replace('$', '')) || 0;
+
+            const nuevosIngresos = ingresosActuales + ingreso;
+            const nuevosEgresos = egresosActuales + egreso;
+            const nuevoBalance = nuevosIngresos - nuevosEgresos;
+
+            ingresosElem.textContent = `$${nuevosIngresos}`;
+            egresosElem.textContent = `$${nuevosEgresos}`;
+            balanceElem.textContent = `$${nuevoBalance}`;
+        }
+
+        function agregarProducto() {
+            const nombre = document.getElementById('nombre-producto').value;
+            const foto = document.getElementById('foto-factura').files[0];
+            const listaProductos = document.getElementById('lista-productos');
+
+            if (nombre && foto) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const productoDiv = document.createElement('div');
+                    productoDiv.className = 'bg-gray-100 p-4 rounded';
+                    productoDiv.innerHTML = `
+                        <img src="${e.target.result}" alt="${nombre}" class="mb-2">
+                        <p>${nombre}</p>
+                    `;
+                    listaProductos.appendChild(productoDiv);
+                };
+                reader.readAsDataURL(foto);
+            }
+        }
+
+        function mostrarBalance(tipo, comercio) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            modalTitle.textContent = `Balance ${tipo} para ${comercio}`;
+            modalContent.textContent = `Aquí se mostraría el balance ${tipo} detallado para ${comercio}.`;
+
+            modal.style.display = 'block';
+        }
+
+        document.getElementById('close-modal').onclick = function() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
