@@ -28,20 +28,22 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto p-4">
+    <!-- Mockup de Login -->
+    <div id="login" class="flex items-center justify-center h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+            <h2 class="text-xl font-bold mb-4 text-center">Sistema de Gestión Astor</h2>
+            <button onclick="entrarAlSistema()" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Entrar</button>
+        </div>
+    </div>
+
+    <!-- Contenido del Sistema -->
+    <div id="contenido-sistema" class="container mx-auto p-4 hidden">
         <h1 class="text-2xl font-bold mb-4">Sistema de Gestión Astor</h1>
         
-        <!-- Acceso con Roles y Permisos -->
-        <div class="bg-white shadow-md rounded-lg p-4 mb-6">
-            <h2 class="text-xl font-semibold mb-2">Acceso con Roles y Permisos</h2>
-            <p>Roles: Administrador, Moderador, Usuario Final</p>
-            <p>Sistema de seguridad integrado para cada nivel de acceso.</p>
-        </div>
-
         <!-- Dashboard Centralizado -->
         <div class="bg-white shadow-md rounded-lg p-4 mb-6">
             <h2 class="text-xl font-semibold mb-2">Dashboard Centralizado</h2>
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-blue-100 p-4 rounded">
                     <h3 class="font-bold">ASTOR 1</h3>
                     <p>Ingresos: <span id="ingresos-astor1">$0</span></p>
@@ -95,7 +97,7 @@
         </div>
 
         <!-- Gestión de Productos y Facturas -->
-        <div class="bg-white shadow-md rounded-lg p-4">
+        <div class="bg-white shadow-md rounded-lg p-4 mb-6">
             <h2 class="text-xl font-semibold mb-2">Gestión de Productos y Facturas</h2>
             <p>Listado completo con imágenes y detalles de productos y facturas de compra.</p>
             <form class="mt-4" onsubmit="return false;">
@@ -103,8 +105,25 @@
                 <input type="file" id="foto-factura" class="block w-full mb-2 p-2 border rounded">
                 <button type="button" onclick="agregarProducto()" class="bg-blue-500 text-white px-4 py-2 rounded">Agregar Producto</button>
             </form>
-            <div id="lista-productos" class="grid grid-cols-2 gap-4 mt-4">
+            <div id="lista-productos" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <!-- Productos se agregarán aquí -->
+            </div>
+        </div>
+
+        <!-- Dashboard de Operaciones -->
+        <div class="bg-white shadow-md rounded-lg p-4">
+            <h2 class="text-xl font-semibold mb-2">Operaciones de Transacciones</h2>
+            <form class="mt-4" onsubmit="return false;">
+                <input type="text" id="descripcion-transaccion" placeholder="Descripción" class="block w-full mb-2 p-2 border rounded">
+                <input type="number" id="monto-transaccion" placeholder="Monto" class="block w-full mb-2 p-2 border rounded">
+                <select id="tipo-transaccion" class="block w-full mb-2 p-2 border rounded">
+                    <option value="ingreso">Ingreso</option>
+                    <option value="egreso">Egreso</option>
+                </select>
+                <button type="button" onclick="agregarOperacion()" class="bg-blue-500 text-white px-4 py-2 rounded">Agregar Operación</button>
+            </form>
+            <div id="lista-operaciones" class="mt-4">
+                <!-- Operaciones se agregarán aquí -->
             </div>
         </div>
     </div>
@@ -119,6 +138,11 @@
     </div>
 
     <script>
+        function entrarAlSistema() {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('contenido-sistema').classList.remove('hidden');
+        }
+
         function agregarTransaccion(comercio) {
             const ingreso = parseFloat(document.getElementById(`ingreso-${comercio}`).value) || 0;
             const egreso = parseFloat(document.getElementById(`egreso-${comercio}`).value) || 0;
@@ -156,6 +180,45 @@
                 };
                 reader.readAsDataURL(foto);
             }
+        }
+
+        function agregarOperacion() {
+            const descripcion = document.getElementById('descripcion-transaccion').value;
+            const monto = parseFloat(document.getElementById('monto-transaccion').value) || 0;
+            const tipo = document.getElementById('tipo-transaccion').value;
+            const listaOperaciones = document.getElementById('lista-operaciones');
+
+            if (descripcion && monto) {
+                const operacionDiv = document.createElement('div');
+                operacionDiv.className = 'bg-gray-100 p-4 rounded mb-2 flex justify-between items-center';
+                operacionDiv.innerHTML = `
+                    <div>
+                        <p><strong>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}:</strong> ${descripcion}</p>
+                        <p>Monto: $${monto}</p>
+                    </div>
+                    <div>
+                        <button onclick="editarOperacion(this)" class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">Editar</button>
+                        <button onclick="eliminarOperacion(this)" class="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+                    </div>
+                `;
+                listaOperaciones.appendChild(operacionDiv);
+            }
+        }
+
+        function editarOperacion(button) {
+            const operacionDiv = button.parentElement.parentElement;
+            const descripcion = prompt("Editar Descripción:", operacionDiv.querySelector('p').textContent.split(': ')[1]);
+            const monto = prompt("Editar Monto:", operacionDiv.querySelectorAll('p')[1].textContent.split('$')[1]);
+
+            if (descripcion && monto) {
+                operacionDiv.querySelector('p').innerHTML = `<strong>${operacionDiv.querySelector('p strong').textContent}</strong>: ${descripcion}`;
+                operacionDiv.querySelectorAll('p')[1].textContent = `Monto: $${monto}`;
+            }
+        }
+
+        function eliminarOperacion(button) {
+            const operacionDiv = button.parentElement.parentElement;
+            operacionDiv.remove();
         }
 
         function mostrarBalance(tipo, comercio) {
